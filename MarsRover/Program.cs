@@ -8,7 +8,7 @@ namespace MarsRover
 {
     public class Program
     {
-        static void Main(string[] args)
+        public static void Main(string[] args)
         {
             var containerBuilder = RegisterServices();
             using (var container = containerBuilder.Build())
@@ -16,16 +16,19 @@ namespace MarsRover
                 var executer = container.Resolve<IExecuter>();
                 var caseStudyInputs = CreateCaseStudyInput();
                 executer.Execute(caseStudyInputs);
+                var caseStudyOutputs = executer.GetOutputs();
+                WriteCaseStudyToConsole(caseStudyInputs, caseStudyOutputs);
             }  
         }
 
         public static void WriteCaseStudyToConsole(string inputs, string outputs)
         {
-            Console.WriteLine("Inputs :");
+            Console.WriteLine("Test Input:");
             Console.WriteLine(inputs);
             Console.WriteLine();
-            Console.WriteLine("Outputs :");
+            Console.WriteLine("Expected Output:");
             Console.WriteLine(outputs);
+            Console.ReadLine();
         }
 
         public static string CreateCaseStudyInput()

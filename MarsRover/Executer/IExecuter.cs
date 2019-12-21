@@ -3,5 +3,6 @@
     public interface IExecuter
     {
         void Execute(string inputs);
+        string GetOutputs();
     }
 }

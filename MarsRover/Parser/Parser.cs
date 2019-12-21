@@ -137,19 +137,7 @@ namespace MarsRover.Parser
             }
         }
 
-        public void GetInputs(string inputs)
-        {
-            var orderStrs = inputs.Split(new[] { Environment.NewLine }, StringSplitOptions.None);
-            var strBuilder = new StringBuilder();
-            foreach (var orderStr in orderStrs)
-            {
-                strBuilder.AppendLine(orderStr);
-            }
-
-            Console.Write(strBuilder.ToString());
-        }
-
-        public void GetOutputs()
+        public string GetOutputs()
         {
             var strBuilder = new StringBuilder();
             foreach (var rover in rovers)
@@ -157,8 +145,7 @@ namespace MarsRover.Parser
                 strBuilder.AppendLine(String.Format("{0} {1} {2}", rover.Dot.x, rover.Dot.y, Directions.FirstOrDefault(x => x.Value == rover.Direction).Key));
             }
 
-            Console.Write(strBuilder.ToString());
-            Console.ReadLine();
+            return strBuilder.ToString();
         }
 
         public OrderType GetOrderType(string order)

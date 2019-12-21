@@ -9,10 +9,9 @@ namespace MarsRover.Parser
     {
         IList<IOrder> ParseOrders(string inputs);
         void PlaceOrders(IList<IOrder> orders);
-        void GetOutputs();
+        string GetOutputs();
         void RunOrders();
         void SetSurface(ISurface _surface);
         void SetRovers(IList<IRover> someRovers);
-        void GetInputs(string inputs);
     }
 }

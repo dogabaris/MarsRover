@@ -15,30 +15,24 @@ namespace MarsRover.Executer
 
         public Executer(ISurface _surface, IParser _parser)
         {
+            rovers = new List<IRover>();
             surface = _surface;
             parser = _parser;
-            rovers = new List<IRover>();
             parser.SetSurface(surface);
             parser.SetRovers(rovers);
         }
 
         public void Execute(string inputs)
         {
-            GetInputs(inputs);
             var orders = parser.ParseOrders(inputs);
             parser.PlaceOrders(orders);
             parser.RunOrders();
             GetOutputs();
         }
 
-        private void GetInputs(string inputs)
+        public string GetOutputs()
         {
-            parser.GetInputs(inputs);
-        }
-
-        private void GetOutputs()
-        {
-            parser.GetOutputs();
+            return parser.GetOutputs();
         }
     }
 }
