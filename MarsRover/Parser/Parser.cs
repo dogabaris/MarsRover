@@ -154,7 +154,7 @@ namespace MarsRover.Parser
             var strBuilder = new StringBuilder();
             foreach (var rover in rovers)
             {
-                strBuilder.AppendLine(String.Format("{0} {1} {2}", rover.Dot.x, rover.Dot.y, rover.Direction));
+                strBuilder.AppendLine(String.Format("{0} {1} {2}", rover.Dot.x, rover.Dot.y, Directions.FirstOrDefault(x => x.Value == rover.Direction).Key));
             }
 
             Console.Write(strBuilder.ToString());
