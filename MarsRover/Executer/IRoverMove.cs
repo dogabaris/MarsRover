@@ -6,6 +6,6 @@ namespace MarsRover.Executer
     public interface IRoverMove : IOrder
     {
         IList<Move> Moves { get; set; }
-        void Setter(IRover RoverMove);
+        void Setter(IRover Rover);
     }
 }

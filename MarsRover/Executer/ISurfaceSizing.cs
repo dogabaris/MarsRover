@@ -5,6 +5,6 @@ namespace MarsRover.Executer
     public interface ISurfaceSizing : IOrder
     {
         Dimension Dimension { get; set; }
-        void Setter(ISurface SurfaceSizing);
+        void Setter(ISurface Surface);
     }
 }

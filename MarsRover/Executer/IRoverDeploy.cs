@@ -7,6 +7,6 @@ namespace MarsRover.Executer
     {
         Dot Dot { get; set; }
         Direction Direction { get; set; }
-        void Setter(IRover Rover, ISurface SurfaceSizing);
+        void Setter(IRover Rover, ISurface Surface);
     }
 }
