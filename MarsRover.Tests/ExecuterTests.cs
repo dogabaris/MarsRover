@@ -1,6 +1,7 @@
 ﻿using MarsRover.Entities.Rover;
 using MarsRover.Entities.Surface;
 using MarsRover.Executer;
+using MarsRover.Invoker;
 using MarsRover.Parser;
 using Moq;
 using NUnit.Framework;
@@ -18,6 +19,7 @@ namespace MarsRover.Tests
         {
             var mockSurface = new Mock<ISurface>();
             var mockParser = new Mock<IParser>();
+            var mockRunner = new Mock<IRunner>();
             var strBuilder = new StringBuilder();
             strBuilder.AppendLine("5 5");
             strBuilder.AppendLine("1 2 N");
@@ -26,7 +28,7 @@ namespace MarsRover.Tests
             strBuilder.Append("MMRMMRMRRM");
             var inputs = strBuilder.ToString();
 
-            var executer = new Executer.Executer(mockSurface.Object, mockParser.Object);
+            var executer = new Executer.Executer(mockSurface.Object, mockParser.Object, mockRunner.Object);
             Assert.DoesNotThrow(() => executer.Execute(inputs));
         }
 
@@ -34,42 +36,45 @@ namespace MarsRover.Tests
         public void Is_Executer_GetOutput_Works()
         {
             var mockSurface = new Mock<ISurface>();
+            var mockRunner = new Mock<IRunner>();
             var mockParser = new Mock<IParser>();
             var expectedOrders = new IOrder[] { };
             var strBuilder = new StringBuilder();
 
             mockParser.Setup(x => x.ParseOrders(null)).Returns(expectedOrders);
 
-            var executer = new Executer.Executer(mockSurface.Object, mockParser.Object);
+            var executer = new Executer.Executer(mockSurface.Object, mockParser.Object, mockRunner.Object);
             executer.Execute(null);
 
             var output = executer.GetOutputs();
 
             Assert.AreEqual(output, null);
-            mockParser.Verify(z => z.RunOrders(), Times.Once());
+            mockRunner.Verify(z => z.RunOrders(), Times.Once());
         }
 
         [Test]
-        public void Is_Executer_Parser_SetSurface()
+        public void Is_Executer_Runner_SetSurface()
         {
             var mockSurface = new Mock<ISurface>();
             var mockParser = new Mock<IParser>();
+            var mockRunner = new Mock<IRunner>();
 
-            var executer = new Executer.Executer(mockSurface.Object, mockParser.Object);
+            var executer = new Executer.Executer(mockSurface.Object, mockParser.Object, mockRunner.Object);
 
-            mockParser.Verify(z => z.SetSurface(mockSurface.Object), Times.Once());
+            mockRunner.Verify(z => z.SetSurface(mockSurface.Object), Times.Once());
         }
 
         [Test]
-        public void Is_Executer_Parser_SetRovers()
+        public void Is_Executer_Runner_SetRovers()
         {
             var mockSurface = new Mock<ISurface>();
             var mockRovers = new List<IRover>();
             var mockParser = new Mock<IParser>();
+            var mockRunner = new Mock<IRunner>();
 
-            var executer = new Executer.Executer(mockSurface.Object, mockParser.Object);
+            var executer = new Executer.Executer(mockSurface.Object, mockParser.Object, mockRunner.Object);
 
-            mockParser.Verify(z => z.SetRovers(mockRovers), Times.Once());
+            mockRunner.Verify(z => z.SetRovers(mockRovers), Times.Once());
         }
     }
 }
