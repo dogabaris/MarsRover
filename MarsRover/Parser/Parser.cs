@@ -12,10 +12,7 @@ namespace MarsRover.Parser
     public class Parser : IParser
     {
         private ISurface surface;
-        private IList<IRover> rovers;
-        private IList<IOrder> ordersGonnaRun;
         private IDictionary<Regex, OrderType> OrderTypes;
-        private readonly Func<IRover> RoverFunc;
         private readonly Func<Dimension, ISurfaceSizing> SurfaceSizingJob;
         private readonly Func<IList<Move>, IRoverMove> RoverMoveJob;
         private readonly Func<Dot, Direction, IRoverDeploy> RoverDeployJob;
@@ -25,9 +22,8 @@ namespace MarsRover.Parser
         private readonly IDictionary<OrderType, Func<IOrder>> InitializersDict;
 
         public Parser(Func<Dimension, ISurfaceSizing> _SurfaceSizingJob, Func<IList<Move>, IRoverMove> _RoverMoveJob,
-            Func<Dot, Direction, IRoverDeploy> _RoverDeployJob, Func<IRover> _roverFunc)
+            Func<Dot, Direction, IRoverDeploy> _RoverDeployJob)
         {
-            RoverFunc = _roverFunc;
             SurfaceSizingJob = _SurfaceSizingJob;
             RoverDeployJob = _RoverDeployJob;
             RoverMoveJob = _RoverMoveJob;
@@ -62,16 +58,6 @@ namespace MarsRover.Parser
             };
         }
 
-        public void SetSurface(ISurface _surface)
-        {
-            surface = _surface;
-        }
-
-        public void SetRovers(IList<IRover> someRovers)
-        {
-            rovers = someRovers;
-        }
-
         public IList<IOrder> ParseOrders(string inputs)
         {
             var orders = inputs.Split(new[] { Environment.NewLine }, StringSplitOptions.None);
@@ -82,70 +68,6 @@ namespace MarsRover.Parser
                 resOrders.Add(orderFunc.Invoke(order));
             }
             return resOrders;
-        }
-
-        public void PlaceOrders(IList<IOrder> orders)
-        {
-            ordersGonnaRun = orders;
-        }
-
-        private void InitializeSurfaceSizing(IOrder order)
-        {
-            var landingSurfaceSizeCommand = (ISurfaceSizing)order;
-            landingSurfaceSizeCommand.Setter(surface);
-        }
-
-        private void InitializeRoverDeploy(IOrder order)
-        {
-            var roverDeploy = (IRoverDeploy)order;
-            var newRover = RoverFunc();
-            rovers.Add(newRover);
-            roverDeploy.Setter(newRover, surface);
-        }
-
-        private void InitializeRoverMove(IOrder order)
-        {
-            var roverMove = (IRoverMove)order;
-            var latestRover = rovers[rovers.Count - 1];
-            roverMove.Setter(latestRover);
-        }
-
-        public void RunOrders()
-        {
-            foreach (var order in ordersGonnaRun)
-            {
-                setInitializers(order);
-                order.Run();
-            }
-        }
-
-        private void setInitializers(IOrder order)
-        {
-            switch (order.GetOrderType())
-            {
-                case OrderType.SurfaceSizing:
-                    InitializeSurfaceSizing(order);
-                    break;
-                case OrderType.RoverDeploy:
-                    InitializeRoverDeploy(order);
-                    break;
-                case OrderType.RoverMove:
-                    InitializeRoverMove(order);
-                    break;
-                default:
-                    break;
-            }
-        }
-
-        public string GetOutputs()
-        {
-            var strBuilder = new StringBuilder();
-            foreach (var rover in rovers)
-            {
-                strBuilder.AppendLine(String.Format("{0} {1} {2}", rover.Dot.x, rover.Dot.y, Directions.FirstOrDefault(x => x.Value == rover.Direction).Key));
-            }
-
-            return strBuilder.ToString();
         }
 
         public OrderType GetOrderType(string order)
